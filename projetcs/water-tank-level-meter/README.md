@@ -34,10 +34,6 @@ Here is the list of components used in this project, including links for purchas
 
 The table below shows the pin connections between the SX1278 LoRa module and the ATMEGA328 microcontroller.
 
-#### SX1278 LoRa Module to ATMEGA328 Connections
-
-The table below shows the pin connections between the SX1278 LoRa module and the ATMEGA328 microcontroller.
-
 | **SX1278 Pin** | **ATMEGA328 Pin** | **Description**     |
 | -------------------- | ----------------------- | ----------------------------- |
 | VCC                  | 3.3V                    | Power Supply                |
