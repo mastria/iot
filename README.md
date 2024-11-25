@@ -15,22 +15,23 @@ The **IoT** project aims to provide a collection of code samples and testing fra
 
 ## File References
 
-|Project| File Name | Description |
-|--------------------------|--------------------------|----------------------------------------------|
-|Battery meter | [battery-meter.ino](projetcs/battery-meter/battery-meter.ino) | Code for battery voltage and percentage measurement. |
-|ESP8266 LoRa | [esp8266-lora.ino](projetcs/esp8266-lora) | Code for simple data transmission with LoRa using ESP8266. |
+| Project                      | File Name                                                  | Description                                                              |
+| ---------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [ESP8266] Battery meter      | [battery-meter.ino](projetcs/battery-meter/battery-meter.ino) | Battery voltage and percentage measurement.                              |
+| [ESP8266] LoRa transmitter   | [esp8266-lora.ino](projetcs/esp8266-lora)                     | Simple data transmission with LoRa using SX1278.                         |
+| [ATMEGA328] LoRa Water tank level meter | [atmega328-water-level.ino](projetcs/water-tank-level-meter) | Monitoring water tank levels and transmitting data with SX1278. |
 
 ## Contributing
 
 Contributions are welcome! If you have suggestions for improvements or additional examples, please create a pull request or open an issue.
 
 ## License
+
 This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) file for more details.
 
 <hr>
 
-
-*Thank you for checking out the **IOT** project! We hope you find the examples helpful in your IoT development 
+*Thank you for checking out the **IOT** project! We hope you find the examples helpful in your IoT development
 journey.*
 
 <br>
