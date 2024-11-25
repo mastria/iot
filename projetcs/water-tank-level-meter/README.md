@@ -30,10 +30,7 @@ Here is the list of components used in this project, including links for purchas
 
 ## Transmitter Wiring Diagram
 
-<div style="display: flex;">
-  <img src="transmitter.png" height="550" style="margin-right: 20px;">
-  <img src="photo.jpg" height="550" >
-</div>
+<img src="transmitter.png" width="100%">
 
 ## Pin Connections
 
