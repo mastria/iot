@@ -204,7 +204,7 @@ The **TTGO LoRa32 V2.1** receiver is used with the **OpenMQTTGateway** library a
 For configuration, simply follow the [OpenMQTTGateway documentation](https://docs.openmqttgateway.com/upload/web-install.html) to set up the receiver and connect it to your MQTT platform.
 
 This solution enables seamless communication between LoRa devices using the 915 MHz frequency.
-<br>
+<br><br>
 
 ## Plus: Home Assistant Integration
 
