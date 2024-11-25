@@ -274,6 +274,7 @@ sensor:
 - [Thingiverse: LoRa Antenna Project](https://www.thingiverse.com/thing:6768553)
 
 <br>
+
 ## Acknowledgments
 
 Thank you for checking out this project! I hope it helps you with your own IoT applications.
