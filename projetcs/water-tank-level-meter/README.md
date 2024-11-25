@@ -36,8 +36,6 @@ Here is the list of components used in this project, including links for purchas
 
 #### SX1278 LoRa Module to ATMEGA328 Connections
 
-The table below shows the pin connections between the SX1278 LoRa module and the ATMEGA328 microcontroller.
-
 | **SX1278 Pin** | **ATMEGA328 Pin** | **Description**     |
 | -------------------- | ----------------------- | ------------------------- |
 | VCC                  | 3.3V                    | Power Supply              |
@@ -49,8 +47,6 @@ The table below shows the pin connections between the SX1278 LoRa module and the
 | DIO0                 | Pin 2 (INT0)            | Interrupt Pin (optional)  |
 
 #### JSN-SR04T Ultrasonic Sensor to ATMEGA328 Connections
-
-The table below shows the pin connections between the JSN-SR04T ultrasonic sensor and the ATMEGA328 microcontroller.
 
 | **JSN-SR04T Pin** | **ATMEGA328 Pin** | **Description**        |
 | ----------------------- | ----------------------- | ---------------------------- |
