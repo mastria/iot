@@ -192,7 +192,7 @@ float calculateBatteryPercentage(float currentVoltage) {
 
 <br>
 
-#### LoRa32 Receiver - TTGO LoRa32 V2.1
+## LoRa32 Receiver - TTGO LoRa32 V2.1
 
 The **TTGO LoRa32 V2.1** receiver is used with the **OpenMQTTGateway** library as a LoRa gateway. This setup allows the receiver to receive LoRa messages and forward them via MQTT.
 
@@ -200,7 +200,7 @@ For configuration, simply follow the [OpenMQTTGateway documentation](https://doc
 
 This solution enables seamless communication between LoRa devices using the 915 MHz frequency.
 
-### References
+## References
 
 - [Powering ESP32/ESP8266 with Solar Panels and Battery Level Monitoring](https://randomnerdtutorials.com/power-esp32-esp8266-solar-panels-battery-level-monitoring/)
 - [Distance Measurement Project by abtom87](https://github.com/abtom87/Distance-measurement-)
@@ -214,7 +214,7 @@ This solution enables seamless communication between LoRa devices using the 915 
 - [Arduino Pro Mini Wiki](https://land-boards.com/blwiki/index.php?title=Arduino_Pro_Mini)
 - [Thingiverse: LoRa Antenna Project](https://www.thingiverse.com/thing:6768553)
 
-### Acknowledgments
+## Acknowledgments
 
 Thank you for checking out this project! I hope it helps you with your own IoT applications.
 
