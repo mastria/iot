@@ -17,7 +17,8 @@ The **IOT** project aims to provide a collection of code samples and testing fra
 
 |Project| File Name | Description |
 |--------------------------|--------------------------|----------------------------------------------|
-|Battery meter | [battery-meter.ino](projetcs/battery-meter.ino) | Code for battery voltage and percentage measurement. |
+|Battery meter | [battery-meter.ino](projetcs/battery-meter/battery-meter.ino) | Code for battery voltage and percentage measurement. |
+|ESP8266 LoRa | [esp8266-lora.ino](projetcs/esp8266-lora) | Code for simple data transmission with LoRa using ESP8266. |
 
 ## Contributing
 

@@ -1,0 +1,8 @@
+NodeMCU Pins                         SX1278 Pins
+GND                                       GND
+3.3V                                      VCC
+D8                                        NSS
+D7                                        MOSI
+D6                                        MISO
+D5                                        SCK
+D0                                        RST
