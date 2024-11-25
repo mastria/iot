@@ -1,3 +1,7 @@
+<p align="center">
+    <img src="water-tank.gif" width="150" alt="Home Assistant card">
+</p>
+
 # [ATMEGA328] LoRa Water tank level meter
 
 This project measures the water tank level using the **JSN-SR04T** ultrasonic sensor, with data processing handled by an **ATMEGA328** and transmission via LoRa using the **SX1278** module.
@@ -26,7 +30,10 @@ Here is the list of components used in this project, including links for purchas
 
 ## Transmitter Wiring Diagram
 
-![Transmitter Wiring Diagram](transmitter.png)
+<div style="display: flex;">
+  <img src="transmitter.png" height="550" style="margin-right: 20px;">
+  <img src="photo.jpg" height="550" >
+</div>
 
 ## Pin Connections
 
