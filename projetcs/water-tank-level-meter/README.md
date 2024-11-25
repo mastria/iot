@@ -9,7 +9,7 @@ This project measures the water tank level using the **JSN-SR04T** ultrasonic se
 The system is powered by a **18650 battery with solar charging**, and the battery voltage and charge percentage are also monitored. Ensuring battery operation was crucial, as the location is approximately **120 meters from the receiver** and has no power supply. In my tests, the system ran for **15+ days on battery** power alone (without recharging).
 
 On the receiving end, a **LoRa32** receives the transmitted data and forwards it to an MQTT server, enabling integration with monitoring or automation systems.
-<br>
+<br><br>
 
 ## List of Components
 
@@ -28,7 +28,7 @@ Here is the list of components used in this project, including links for purchas
 - [LILYGO® Ttgo LoRa32 Development Board](https://pt.aliexpress.com/item/32872078587.html)
 
 *This list includes all the components and modules required to build the project. Be sure to double-check the specifications of each item before purchasing.*
-<br>
+<br><br>
 
 ## Transmitter Wiring Diagram
 
@@ -62,7 +62,7 @@ Here is the list of components used in this project, including links for purchas
 #### Additional Connections
 
 The remaining connections for the battery, solar panel, and other components are straightforward and follow the schematic shown above. Please refer to the schematic diagram for detailed wiring.
-<br>
+<br><br>
 
 ## ATMEGA328 Code
 
