@@ -35,25 +35,25 @@ Here is the list of components used in this project, including links for purchas
 The table below shows the pin connections between the SX1278 LoRa module and the ATMEGA328 microcontroller.
 
 | **SX1278 Pin** | **ATMEGA328 Pin** | **Description**     |
-| -------------------- | ----------------------- | ----------------------------- |
-| VCC                  | 3.3V                    | Power Supply                |
-| GND                  | GND                     | Ground                      |
-| SCK                  | Pin 13 (SCK)            | Serial Clock (SPI)          |
-| MISO                 | Pin 12 (MISO)           | Master In Slave Out (SPI)   |
-| MOSI                 | Pin 11 (MOSI)           | Master Out Slave In (SPI)   |
-| NSS                  | Pin 10 (CS)             | Chip Select (SPI)           |
-| DIO0                 | Pin 2 (INT0)            | Interrupt Pin (optional)    |
+| -------------------- | ----------------------- | ------------------------- |
+| VCC                  | 3.3V                    | Power Supply              |
+| GND                  | GND                     | Ground                    |
+| SCK                  | Pin 13 (SCK)            | Serial Clock (SPI)        |
+| MISO                 | Pin 12 (MISO)           | Master In Slave Out (SPI) |
+| MOSI                 | Pin 11 (MOSI)           | Master Out Slave In (SPI) |
+| NSS                  | Pin 10 (CS)             | Chip Select (SPI)         |
+| DIO0                 | Pin 2 (INT0)            | Interrupt Pin (optional)  |
 
 #### JSN-SR04T Ultrasonic Sensor to ATMEGA328 Connections
 
 The table below shows the pin connections between the JSN-SR04T ultrasonic sensor and the ATMEGA328 microcontroller.
 
 | **JSN-SR04T Pin** | **ATMEGA328 Pin** | **Description**        |
-| ----------------------- | ----------------------- | ------------------------------ |
-| VCC                     | 3.3V                    | Power Supply                   |
-| GND                     | GND                     | Ground                         |
-| TRIG                    | Pin 4 (Digital I/O)     | Trigger Pin                    |
-| ECHO                    | Pin 5 (Digital I/O)     | Echo Pin (Input from sensor)   |
+| ----------------------- | ----------------------- | ---------------------------- |
+| VCC                     | 3.3V                    | Power Supply                 |
+| GND                     | GND                     | Ground                       |
+| TRIG                    | Pin 4 (Digital I/O)     | Trigger Pin                  |
+| ECHO                    | Pin 5 (Digital I/O)     | Echo Pin (Input from sensor) |
 
 #### Additional Connections
 
@@ -190,16 +190,34 @@ float calculateBatteryPercentage(float currentVoltage) {
 }
 ```
 
+<br>
+
+#### LoRa32 Receiver - TTGO LoRa32 V2.1
+
+The **TTGO LoRa32 V2.1** receiver is used with the **OpenMQTTGateway** library as a LoRa gateway. This setup allows the receiver to receive LoRa messages and forward them via MQTT.
+
+For configuration, simply follow the [OpenMQTTGateway documentation](https://docs.openmqttgateway.com/upload/web-install.html) to set up the receiver and connect it to your MQTT platform.
+
+This solution enables seamless communication between LoRa devices using the 915 MHz frequency.
+
 ### References
 
-- [JSN-SR04T Ultrasonic Sensor Documentation](https://www.alldatasheet.com/datasheet-pdf/pdf/1147594/ETC1/JSN-SR04T.html)  
-- [SX1278 LoRa Module Datasheet](https://www.alldatasheet.com/datasheet-pdf/pdf/1148304/ETC2/SX1278.html)  
-- [ATMEGA328 Datasheet](https://www.microchip.com/en-us/product/ATmega328P)  
-- [Arduino Low Power Library](https://github.com/rocketscream/Low-Power)  
-- [LoRa Library for Arduino](https://github.com/sandeepmistry/arduino-LoRa)
+- [Powering ESP32/ESP8266 with Solar Panels and Battery Level Monitoring](https://randomnerdtutorials.com/power-esp32-esp8266-solar-panels-battery-level-monitoring/)
+- [Distance Measurement Project by abtom87](https://github.com/abtom87/Distance-measurement-)
+- [Deep Sleep Example for ATMEGA328P](https://github.com/RalphBacon/Arduino-Deep-Sleep/blob/master/Sleep_ATMEGA328P.ino)
+- [LoRa Communication with Arduino P2P](https://www.makerhero.com/blog/comunicacao-lora-com-arduino-p2p/)
+- [OTAA-Based LoRaWAN Node with Arduino SX1276](https://how2electronics.com/otaa-based-lorawan-node-with-arduino-lora-sx1276/)
+- [Mailbox Guard Project](https://github.com/PricelessToolkit/MailBoxGuard)
+- [Onedrive Link](https://onedrive.live.com/?authkey=%21AIzzyuwUAotKD8A&id=CD05BF6E6E1D1C15%214646&cid=CD05BF6E6E1D1C15)
+- [LoRa with ESP8266 Blog Post](https://fazerlab.wordpress.com/2020/09/08/lora-com-esp8266/)
+- [OpenMQTTGateway Example: Lora Temperature](https://github.com/1technophile/OpenMQTTGateway/blob/development/examples/LoraTemperature/src/main.cpp)
+- [Arduino Pro Mini Wiki](https://land-boards.com/blwiki/index.php?title=Arduino_Pro_Mini)
+- [Thingiverse: LoRa Antenna Project](https://www.thingiverse.com/thing:6768553)
 
 ### Acknowledgments
 
 Thank you for checking out this project! I hope it helps you with your own IoT applications.
 
-Contributions, suggestions, and improvements are always welcome. Feel free to fork the repository and open a pull request with your changes.  
+A special thank you to the authors and contributors of the resources in the references section.
+
+Contributions, suggestions, and improvements are always welcome. Feel free to fork the repository and open a pull request with your changes.
