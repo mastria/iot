@@ -25,7 +25,7 @@ Here is the list of components used in this project, including links for purchas
 - [3W, 5V Solar Panel](https://pt.aliexpress.com/item/1005006259573646.html)
 - [33kΩ and 100kΩ Resistors (Pack)](https://pt.aliexpress.com/item/1005002344985336.html)
 - [Jumper Wires (Pack)](https://pt.aliexpress.com/item/1005005945668553.html)
-- [LILYGO® Ttgo LoRa32 Development Board](https://pt.aliexpress.com/item/32872078587.html)
+- [LILYGO® Ttgo LoRa32 (915MHz)](https://pt.aliexpress.com/item/32872078587.html)
 
 *This list includes all the components and modules required to build the project. Be sure to double-check the specifications of each item before purchasing.*
 <br><br>
@@ -198,6 +198,10 @@ float calculateBatteryPercentage(float currentVoltage) {
 <br>
 
 ## LoRa32 Receiver - TTGO LoRa32 V2.1
+
+<p align="center">
+    <img src="lora32.jpg" width="30%" alt="LoRa32">
+</p>
 
 The **TTGO LoRa32 V2.1** receiver is used with the **OpenMQTTGateway** library as a LoRa gateway. This setup allows the receiver to receive LoRa messages and forward them via MQTT.
 
