@@ -208,7 +208,7 @@ This solution enables seamless communication between LoRa devices using the 915 
 - [LoRa Communication with Arduino P2P](https://www.makerhero.com/blog/comunicacao-lora-com-arduino-p2p/)
 - [OTAA-Based LoRaWAN Node with Arduino SX1276](https://how2electronics.com/otaa-based-lorawan-node-with-arduino-lora-sx1276/)
 - [Mailbox Guard Project](https://github.com/PricelessToolkit/MailBoxGuard)
-- [Onedrive Link](https://onedrive.live.com/?authkey=%21AIzzyuwUAotKD8A&id=CD05BF6E6E1D1C15%214646&cid=CD05BF6E6E1D1C15)
+- [Onedrive Link (Cleber Augusto Borges)](https://onedrive.live.com/?authkey=%21AIzzyuwUAotKD8A&id=CD05BF6E6E1D1C15%214646&cid=CD05BF6E6E1D1C15)
 - [LoRa with ESP8266 Blog Post](https://fazerlab.wordpress.com/2020/09/08/lora-com-esp8266/)
 - [OpenMQTTGateway Example: Lora Temperature](https://github.com/1technophile/OpenMQTTGateway/blob/development/examples/LoraTemperature/src/main.cpp)
 - [Arduino Pro Mini Wiki](https://land-boards.com/blwiki/index.php?title=Arduino_Pro_Mini)
