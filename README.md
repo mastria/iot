@@ -1,6 +1,6 @@
 # IOT Project
 
-Welcome to the **IOT** project! This repository contains various example codes and tests for Internet of Things (IoT) applications that I needed and developed. It also serves as a personal repository to store useful snippets and implementations that can be integrated into my IoT projects. Each example demonstrates specific functionalities tailored to my requirements.
+Welcome to the **IoT** project! This repository contains various example codes and tests for Internet of Things (IoT) applications that I needed and developed. It also serves as a personal repository to store useful snippets and implementations that can be integrated into my IoT projects. Each example demonstrates specific functionalities tailored to my requirements.
 
 ## Table of Contents
 
@@ -11,7 +11,7 @@ Welcome to the **IOT** project! This repository contains various example codes a
 
 ## Description
 
-The **IOT** project aims to provide a collection of code samples and testing frameworks for developing IoT applications. Whether you are working on sensor integration, data transmission, or device control, this repository has something to offer.
+The **IoT** project aims to provide a collection of code samples and testing frameworks for developing IoT applications, all of which have been thoroughly tested and are fully functional. Whether you are working on sensor integration, data transmission, or device control, this repository has something to offer.
 
 ## File References
 
