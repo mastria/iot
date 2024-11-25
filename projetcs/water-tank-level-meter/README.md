@@ -9,6 +9,7 @@ This project measures the water tank level using the **JSN-SR04T** ultrasonic se
 The system is powered by a **18650 battery with solar charging**, and the battery voltage and charge percentage are also monitored. Ensuring battery operation was crucial, as the location is approximately **120 meters from the receiver** and has no power supply. In my tests, the system ran for **15+ days on battery** power alone (without recharging).
 
 On the receiving end, a **LoRa32** receives the transmitted data and forwards it to an MQTT server, enabling integration with monitoring or automation systems.
+<br>
 
 ## List of Components
 
@@ -27,10 +28,13 @@ Here is the list of components used in this project, including links for purchas
 - [LILYGO® Ttgo LoRa32 Development Board](https://pt.aliexpress.com/item/32872078587.html)
 
 *This list includes all the components and modules required to build the project. Be sure to double-check the specifications of each item before purchasing.*
+<br>
 
 ## Transmitter Wiring Diagram
 
 <img src="transmitter.png" width="100%">
+
+<br>
 
 ## Pin Connections
 
@@ -58,6 +62,7 @@ Here is the list of components used in this project, including links for purchas
 #### Additional Connections
 
 The remaining connections for the battery, solar panel, and other components are straightforward and follow the schematic shown above. Please refer to the schematic diagram for detailed wiring.
+<br>
 
 ## ATMEGA328 Code
 
@@ -199,6 +204,60 @@ The **TTGO LoRa32 V2.1** receiver is used with the **OpenMQTTGateway** library a
 For configuration, simply follow the [OpenMQTTGateway documentation](https://docs.openmqttgateway.com/upload/web-install.html) to set up the receiver and connect it to your MQTT platform.
 
 This solution enables seamless communication between LoRa devices using the 915 MHz frequency.
+<br>
+
+## Plus: Home Assistant Integration
+
+To integrate the sensor with Home Assistant, you can use the following YAML configuration. This code will allow Home Assistant to read the sensor data and display it on your dashboard.
+
+#### Sensor
+```yaml
+mqtt:
+  sensor:
+    # WATER TANK
+    - name: "Water Tank - Distance"
+      state_topic: "lora/ESP32_LORA/LORAtoMQTT/watertank"
+      device_class: "distance"
+      unit_of_measurement: "cm"
+      value_template: "{{ value_json.d }}"
+      unique_id: "watertank_distance"
+    - name: "Water Tank - Voltage"
+      state_topic: "lora/ESP32_LORA/LORAtoMQTT/watertank"
+      device_class: "voltage"
+      unit_of_measurement: "V"
+      value_template: "{{ value_json.v }}"
+      unique_id: "watertank_voltage"
+    - name: "Water Tank - Percentage"
+      state_topic: "lora/ESP32_LORA/LORAtoMQTT/watertank"
+      device_class: "battery"
+      unit_of_measurement: "%"
+      value_template: "{{ value_json.p }}"
+      unique_id: "watertank_percentage"
+```
+
+#### Sensor template
+```yaml
+sensor:
+ - platform: template
+    sensors:
+      water_tank_percentage:
+        unique_id: water_tank_percentage
+        friendly_name: "Water Tank"
+        unit_of_measurement: "%"
+        icon_template: "mdi:water-percent"
+        value_template: >-
+          {% set full_height = 21 %}
+          {% set empty_height = 120 %}
+          {% set measured_height = states('sensor.water_tank_distance') | float(empty_height) %}
+          {% if measured_height < full_height %}
+            100
+          {% elif measured_height > empty_height %}
+            0
+          {% else %}
+            {{ ((empty_height - measured_height) / (empty_height - full_height) * 100) | round(1) }}
+          {% endif %}
+```
+<br>
 
 ## References
 
@@ -214,6 +273,7 @@ This solution enables seamless communication between LoRa devices using the 915 
 - [Arduino Pro Mini Wiki](https://land-boards.com/blwiki/index.php?title=Arduino_Pro_Mini)
 - [Thingiverse: LoRa Antenna Project](https://www.thingiverse.com/thing:6768553)
 
+<br>
 ## Acknowledgments
 
 Thank you for checking out this project! I hope it helps you with your own IoT applications.
