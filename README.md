@@ -17,9 +17,9 @@ The **IoT** project aims to provide a collection of code samples and testing fra
 
 | Project                      | File Name                                                  | Description                                                              |
 | ---------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------ |
-| [ESP8266] Battery meter      | [battery-meter.ino](projetcs/battery-meter/battery-meter.ino) | Battery voltage and percentage measurement.                              |
-| [ESP8266] LoRa transmitter   | [esp8266-lora.ino](projetcs/esp8266-lora)                     | Simple data transmission with LoRa using SX1278.                         |
-| [ATMEGA328] LoRa Water tank level meter | [atmega328-water-level.ino](projetcs/water-tank-level-meter) | Monitoring water tank levels and transmitting data with SX1278. |
+| [ESP8266] Battery meter      | [battery-meter.ino](projects/battery-meter/battery-meter.ino) | Battery voltage and percentage measurement.                              |
+| [ESP8266] LoRa transmitter   | [esp8266-lora.ino](projects/esp8266-lora)                     | Simple data transmission with LoRa using SX1278.                         |
+| [ATMEGA328] LoRa Water tank level meter | [atmega328-water-level.ino](projects/water-tank-level-meter) | Monitoring water tank levels and transmitting data with SX1278. |
 
 ## Contributing
 
