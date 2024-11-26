@@ -124,7 +124,7 @@ void setup() {
 
 void loop() {
   // Deep Sleep
-  for (int i = 0; i < 10; i++) {  // 11 x 8s = 88s (~1 minute and a half)
+  for (int i = 0; i < 10; i++) {  // 10 x 8s = 80s (~1 minute and 20 seconds)
     LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
   }
   delay(100);
