@@ -2,7 +2,7 @@
 
 ### 27/05/2025
 
-- Add [[WT32-ETH01] Web client](projects/wt32-eth01)
+- Add [[ESP32-ETH01] Web client](projects/esp32-eth01)
 
 ### 25/11/2024
 
