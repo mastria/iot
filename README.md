@@ -21,6 +21,7 @@ The **IoT** project aims to provide a collection of code samples and testing fra
 | [ESP8266] LoRa transmitter   | [esp8266-lora.ino](projects/esp8266-lora)                     | Simple data transmission with LoRa using SX1278.                         |
 | [ATMEGA328] LoRa Water tank level meter | [atmega328-water-level.ino](projects/water-tank-level-meter) | Monitoring water tank levels and transmitting data with SX1278. |
 | [ESP32-ETH01] Web client | [esp32-eth01-webclient.ino](projects/esp32-eth01) | First configuration for ethernet connection. |
+| [ESP32] ESPHome Touch Panel | [painel.yaml](projects/esphome-lvgl-panel) | LVGL touch panel with water tank level display and 6 MQTT-controlled buttons, running on the ESP32-2432S028R. |
 
 ## Contributing
 

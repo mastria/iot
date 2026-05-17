@@ -1,0 +1,572 @@
+# Pinos do hardware:
+#   SPI CLK:  GPIO14   SPI MOSI: GPIO13   SPI MISO: GPIO12
+#   Display CS: GPIO15   DC: GPIO2   (RST ligado ao 3.3V, sem GPIO)
+#   Backlight: GPIO21  |  Touch CS: GPIO33  Touch IRQ: GPIO36
+# Driver: mipi_spi com model: ESP32-2432S028 (pinos pré-configurados)
+
+# ─────────────────────────────────────────────────────────────────
+# SUBSTITUTIONS
+# ─────────────────────────────────────────────────────────────────
+substitutions:
+  device_name: painel-chacara
+  friendly_name: "Painel Chácara"
+
+# ─────────────────────────────────────────────────────────────────
+# ESPHOME
+# ─────────────────────────────────────────────────────────────────
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# ─────────────────────────────────────────────────────────────────
+# LOGGER / API / OTA / WIFI
+# ─────────────────────────────────────────────────────────────────
+logger:
+  level: WARN
+
+api:
+  encryption:
+    key: !secret api_key
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "${friendly_name} AP"
+    password: "12345678"
+  use_address: "192.168.1.30"
+
+# web_server:
+#   port: 80
+
+captive_portal:
+
+# ─────────────────────────────────────────────────────────────────
+# SPI BUS  (display + touch compartilham o mesmo barramento)
+# ─────────────────────────────────────────────────────────────────
+spi:
+  - id: lcd_spi
+    clk_pin: GPIO14
+    mosi_pin: GPIO13
+    miso_pin: GPIO12
+  - id: touch_spi
+    clk_pin: GPIO25
+    mosi_pin: GPIO32
+    miso_pin: GPIO39
+
+# ─────────────────────────────────────────────────────────────────
+# BACKLIGHT  (PWM via LEDC → luz dimerizável)
+# ─────────────────────────────────────────────────────────────────
+output:
+  - platform: ledc
+    pin: GPIO21
+    id: backlight_pwm
+
+light:
+  - platform: monochromatic
+    output: backlight_pwm
+    name: "Backlight"
+    id: backlight
+    restore_mode: ALWAYS_ON
+
+# ─────────────────────────────────────────────────────────────────
+# DISPLAY  —  mipi_spi com preset oficial para ESP32-2432S028
+#   O model pré-configura: CS=GPIO15, DC=GPIO2, rotação, 320x240
+#   Não é necessário repetir esses parâmetros.
+# ─────────────────────────────────────────────────────────────────
+display:
+  - platform: mipi_spi
+    spi_id: lcd_spi
+    model: ESP32-2432S028
+    id: my_display
+    auto_clear_enabled: false   # obrigatório para LVGL
+    update_interval: never      # LVGL gerencia o refresh
+
+# ─────────────────────────────────────────────────────────────────
+# TOUCHSCREEN  XPT2046 resistivo
+#
+# CALIBRAÇÃO: os valores abaixo são um ponto de partida razoável.
+# Para calibrar com precisão, use o componente de calibração do
+# ESPHome ou envie pelo log com log_level: DEBUG os valores raw.
+# ─────────────────────────────────────────────────────────────────
+touchscreen:
+  platform: xpt2046
+  id: my_touch
+  spi_id: touch_spi
+  cs_pin: GPIO33
+  interrupt_pin: GPIO36
+  update_interval: 50ms
+  threshold: 400
+  calibration:
+    x_min: 280
+    x_max: 3860
+    y_min: 340
+    y_max: 3860
+  transform:
+    swap_xy: false
+    mirror_x: true
+
+# ─────────────────────────────────────────────────────────────────
+# MQTT
+# ─────────────────────────────────────────────────────────────────
+mqtt:
+  broker: 192.168.1.50
+  port: 1883
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery: false
+
+# ─────────────────────────────────────────────────────────────────
+# FONTS  —  MDI v7.4.47  (ícones tamanho 36px)
+# ─────────────────────────────────────────────────────────────────
+font:
+  - file: "https://github.com/Templarian/MaterialDesign-Webfont/raw/v7.4.47/fonts/materialdesignicons-webfont.ttf"
+    id: mdi_36
+    size: 36
+    bpp: 4
+    glyphs:
+      - "\U000F02E3"   # mdi:bed             — Varanda Quartos
+      - "\U000F0769"   # mdi:ceiling-light   — Varanda
+      - "\U000F09F1"   # mdi:flower-tulip    — Jardim
+      - "\U000F0E45"   # mdi:grill           — Churrasqueira
+      - "\U000F01FA"   # mdi:engine          — Filtro
+      - "\U000F0D63"   # mdi:car-parking-lights — Luzes Piscina
+      - "\U000F0E0A"   # mdi:water-percent - Ícone caixa
+
+# ─────────────────────────────────────────────────────────────────
+# GLOBALS  —  Nível da caixa d'água (0-100) e estados dos botões
+# ─────────────────────────────────────────────────────────────────
+globals:
+  - id: g_agua
+    type: float
+    initial_value: "0.0"
+
+# ─────────────────────────────────────────────────────────────────
+# LVGL  —  UI principal: caixa d'água + 6 botões de controle
+# ─────────────────────────────────────────────────────────────────
+# Layout portrait 240×320:
+#   - Topo:    sensor caixa d'água (~107px)
+#   - Abaixo:  grade 2×3 com 6 botões (~210px)
+# ─────────────────────────────────────────────────────────────────
+lvgl:
+  displays:
+    - my_display
+  touchscreens:
+    - touchscreen_id: my_touch
+  buffer_size: 25%
+  disp_bg_color: 0x0D0D1A
+
+  # ── Tema global ─────────────────────────────────────────────────
+  theme:
+    button:
+      bg_color: 0x1E3A5F
+      bg_grad_color: 0x0D1F35
+      bg_grad_dir: VER
+      bg_opa: COVER
+      border_color: 0x2A5080
+      border_width: 1
+      radius: 8
+      text_color: 0xCCCCCC
+      pressed:
+        bg_color: 0x0A2040
+        bg_grad_color: 0x050F20
+      checked:
+        bg_color: 0xFFDF94
+        bg_grad_color: 0xFFAA00
+        border_color: 0xFFAA00
+        text_color: 0x1A1A00
+
+  pages:
+    - id: main_page
+      bg_color: 0x0D0D1A
+
+      widgets:
+
+        # ════════════════════════════════════════════════════════════
+        # CAIXA D'ÁGUA  —  barra vertical com preenchimento de baixo
+        # ════════════════════════════════════════════════════════════
+        # Container externo (borda + fundo cinza escuro, 107px alto)
+        - obj:
+            id: tank_outer
+            x: 5
+            y: 5
+            width: 230
+            height: 107
+            radius: 6
+            border_width: 2
+            border_color: 0x4080C0
+            bg_color: 0x0A1A2E
+            pad_all: 3
+
+            widgets:
+              # Barra de preenchimento (cresce de baixo p/ cima)
+              # Altura inicial 0 → será atualizada via MQTT
+              - obj:
+                  id: tank_fill
+                  align: BOTTOM_MID
+                  width: 224
+                  height: 1
+                  radius: 3
+                  bg_color: 0x0077CC
+                  border_width: 0
+
+              # Rótulo da percentagem
+              - label:
+                  id: lbl_agua
+                  align: CENTER
+                  text: "-- %"
+                  text_font: montserrat_22
+                  text_color: 0xFFFFFF
+              # Rótulo fixo "CAIXA D'ÁGUA"
+              - label:
+                  id: lbl_agua_titulo
+                  align: TOP_MID
+                  y: 6
+                  text: "CAIXA D'AGUA"
+                  text_font: montserrat_14
+                  text_color: 0xFFFFFF
+
+        # ════════════════════════════════════════════════════════════
+        # GRADE DE BOTÕES  2 colunas × 3 linhas
+        # Área disponível: y=117 até y=320  →  203px de altura
+        # Cada botão: ~96px largo, ~63px alto
+        # ════════════════════════════════════════════════════════════
+
+        # ── Linha 1 ──────────────────────────────────────────────
+        # Botão 1: Varanda Quartos
+        - button:
+            id: btn_varanda_quartos
+            x: 5
+            y: 117
+            width: 110
+            height: 63
+            checkable: true
+            on_click:
+              then:
+                - if:
+                    condition:
+                      lambda: return lv_obj_has_state(id(btn_varanda_quartos), LV_STATE_CHECKED);
+                    then:
+                      - mqtt.publish:
+                          topic: chacara/painel/varanda_quartos/cmd
+                          payload: "ON"
+                    else:
+                      - mqtt.publish:
+                          topic: chacara/painel/varanda_quartos/cmd
+                          payload: "OFF"
+            widgets:
+              - label:
+                  id: ico_varanda_quartos
+                  align: TOP_MID
+                  y: -4
+                  text_font: mdi_36
+                  text: "\U000F02E3"
+                  text_color: 0xFFFFFF
+              - label:
+                  align: BOTTOM_MID
+                  text: "Varanda Quartos"
+                  text_font: montserrat_12
+                  text_color: 0xFFFFFF
+
+        # Botão 2: Varanda
+        - button:
+            id: btn_varanda
+            x: 125
+            y: 117
+            width: 110
+            height: 63
+            checkable: true
+            on_click:
+              then:
+                - if:
+                    condition:
+                      lambda: return lv_obj_has_state(id(btn_varanda), LV_STATE_CHECKED);
+                    then:
+                      - mqtt.publish:
+                          topic: chacara/painel/varanda/cmd
+                          payload: "ON"
+                    else:
+                      - mqtt.publish:
+                          topic: chacara/painel/varanda/cmd
+                          payload: "OFF"
+            widgets:
+              - label:
+                  id: ico_varanda
+                  align: TOP_MID
+                  y: -4
+                  text_font: mdi_36
+                  text: "\U000F0769"
+                  text_color: 0xFFFFFF
+              - label:
+                  align: BOTTOM_MID
+                  text: "Varanda"
+                  text_font: montserrat_12
+                  text_color: 0xFFFFFF
+
+        # ── Linha 2 ──────────────────────────────────────────────
+        # Botão 3: Jardim
+        - button:
+            id: btn_jardim
+            x: 5
+            y: 186
+            width: 110
+            height: 63
+            checkable: true
+            on_click:
+              then:
+                - if:
+                    condition:
+                      lambda: return lv_obj_has_state(id(btn_jardim), LV_STATE_CHECKED);
+                    then:
+                      - mqtt.publish:
+                          topic: chacara/painel/jardim/cmd
+                          payload: "ON"
+                    else:
+                      - mqtt.publish:
+                          topic: chacara/painel/jardim/cmd
+                          payload: "OFF"
+            widgets:
+              - label:
+                  id: ico_jardim
+                  align: TOP_MID
+                  y: -4
+                  text_font: mdi_36
+                  text: "\U000F09F1"
+                  text_color: 0xFFFFFF
+              - label:
+                  align: BOTTOM_MID
+                  text: "Jardim"
+                  text_font: montserrat_12
+                  text_color: 0xFFFFFF
+
+        # Botão 4: Churrasqueira
+        - button:
+            id: btn_churrasqueira
+            x: 125
+            y: 186
+            width: 110
+            height: 63
+            checkable: true
+            on_click:
+              then:
+                - if:
+                    condition:
+                      lambda: return lv_obj_has_state(id(btn_churrasqueira), LV_STATE_CHECKED);
+                    then:
+                      - mqtt.publish:
+                          topic: chacara/painel/churrasqueira/cmd
+                          payload: "ON"
+                    else:
+                      - mqtt.publish:
+                          topic: chacara/painel/churrasqueira/cmd
+                          payload: "OFF"
+            widgets:
+              - label:
+                  id: ico_churrasqueira
+                  align: TOP_MID
+                  y: -4
+                  text_font: mdi_36
+                  text: "\U000F0E45"
+                  text_color: 0xFFFFFF
+              - label:
+                  align: BOTTOM_MID
+                  text: "Churrasqueira"
+                  text_font: montserrat_12
+                  text_color: 0xFFFFFF
+
+        # ── Linha 3 ──────────────────────────────────────────────
+        # Botão 5: Filtro (Tasmota)
+        - button:
+            id: btn_filtro
+            x: 5
+            y: 255
+            width: 110
+            height: 63
+            checkable: true
+            on_click:
+              then:
+                - if:
+                    condition:
+                      lambda: return lv_obj_has_state(id(btn_filtro), LV_STATE_CHECKED);
+                    then:
+                      - mqtt.publish:
+                          topic: chacara/painel/filtro/cmd
+                          payload: "ON"
+                    else:
+                      - mqtt.publish:
+                          topic: chacara/painel/filtro/cmd
+                          payload: "OFF"
+            widgets:
+              - label:
+                  id: ico_filtro
+                  align: TOP_MID
+                  y: -4
+                  text_font: mdi_36
+                  text: "\U000F01FA"
+                  text_color: 0xFFFFFF
+              - label:
+                  align: BOTTOM_MID
+                  text: "Filtro"
+                  text_font: montserrat_12
+                  text_color: 0xFFFFFF
+
+        # Botão 6: Luzes Piscina (Tasmota)
+        - button:
+            id: btn_luzes_piscina
+            x: 125
+            y: 255
+            width: 110
+            height: 63
+            checkable: true
+            on_click:
+              then:
+                - if:
+                    condition:
+                      lambda: return lv_obj_has_state(id(btn_luzes_piscina), LV_STATE_CHECKED);
+                    then:
+                      - mqtt.publish:
+                          topic: chacara/painel/luzes_piscina/cmd
+                          payload: "ON"
+                    else:
+                      - mqtt.publish:
+                          topic: chacara/painel/luzes_piscina/cmd
+                          payload: "OFF"
+            widgets:
+              - label:
+                  id: ico_luzes_piscina
+                  align: TOP_MID
+                  y: -4
+                  text_font: mdi_36
+                  text: "\U000F0D63"
+                  text_color: 0xFFFFFF
+              - label:
+                  align: BOTTOM_MID
+                  text: "Luzes Piscina"
+                  text_font: montserrat_12
+                  text_color: 0xFFFFFF
+
+# ─────────────────────────────────────────────────────────────────
+# MQTT SUBSCRIPTIONS  —  schema: chacara/painel/<nome>/state
+#   Água:           chacara/painel/agua/state            (0-100)
+#   Varanda Quartos: chacara/painel/varanda_quartos/state (ON/OFF)
+#   Varanda:        chacara/painel/varanda/state          (ON/OFF)
+#   Jardim:         chacara/painel/jardim/state           (ON/OFF)
+#   Churrasqueira:  chacara/painel/churrasqueira/state    (ON/OFF)
+#   Filtro:         chacara/painel/filtro/state           (ON/OFF)
+#   Luzes Piscina:  chacara/painel/luzes_piscina/state    (ON/OFF)
+# ─────────────────────────────────────────────────────────────────
+
+# ── Sensor: nível da caixa d'água ────────────────────────────────
+# Altura interna disponível para fill: 107 - 6(pad) - 4(bordas) = 97px
+# fórmula: fill_height = (valor / 100.0) * 97  (mínimo 2px)
+
+sensor:
+  - platform: mqtt_subscribe
+    name: "Caixa Dagua Percent"
+    id: sns_agua
+    topic: chacara/painel/agua/state
+    on_value:
+      then:
+        - globals.set:
+            id: g_agua
+            value: !lambda return x;
+        # Atualiza altura do fill (área interna: 97px)
+        - lvgl.widget.update:
+            id: tank_fill
+            height: !lambda |-
+              int h = (int)(x / 100.0f * 97.0f);
+              return (h < 2) ? 2 : h;
+        # Atualiza cor conforme nível
+        - lvgl.widget.update:
+            id: tank_fill
+            bg_color: !lambda |-
+              if (x > 50) return lv_color_hex(0x0077CC);
+              if (x > 30) return lv_color_hex(0xFFAA00);
+              return lv_color_hex(0xDD2222);
+        # Atualiza texto percentagem
+        - lvgl.label.update:
+            id: lbl_agua
+            text: !lambda |-
+              char buf[16];
+              int total = (int)roundf(x * 10.0f);
+              snprintf(buf, sizeof(buf), "%d,%d%%", total / 10, total % 10);
+              return std::string(buf);
+
+# ── Switches HA (botões 1–4): state topics ───────────────────────
+# O HA MQTT discovery usa prefixo: homeassistant/switch/<unique_id>/state
+# Os unique_ids abaixo seguem o padrão entity_id sem "switch."
+
+text_sensor:
+  # Botão 1
+  - platform: mqtt_subscribe
+    id: ts_varanda_quartos
+    topic: chacara/painel/varanda_quartos/state
+    on_value:
+      then:
+        - lvgl.widget.update:
+            id: btn_varanda_quartos
+            state:
+              checked: !lambda return (0 == x.compare(std::string{"ON"}));
+
+  # Botão 2
+  - platform: mqtt_subscribe
+    id: ts_varanda
+    topic: chacara/painel/varanda/state
+    on_value:
+      then:
+        - lvgl.widget.update:
+            id: btn_varanda
+            state:
+              checked: !lambda return (0 == x.compare(std::string{"ON"}));
+
+  # Botão 3
+  - platform: mqtt_subscribe
+    id: ts_jardim
+    topic: chacara/painel/jardim/state
+    on_value:
+      then:
+        - lvgl.widget.update:
+            id: btn_jardim
+            state:
+              checked: !lambda return (0 == x.compare(std::string{"ON"}));
+
+  # Botão 4
+  - platform: mqtt_subscribe
+    id: ts_churrasqueira
+    topic: chacara/painel/churrasqueira/state
+    on_value:
+      then:
+        - lvgl.widget.update:
+            id: btn_churrasqueira
+            state:
+              checked: !lambda return (0 == x.compare(std::string{"ON"}));
+
+  # Botão 5 — Filtro
+  - platform: mqtt_subscribe
+    id: ts_filtro
+    topic: chacara/painel/filtro/state
+    on_value:
+      then:
+        - lvgl.widget.update:
+            id: btn_filtro
+            state:
+              checked: !lambda return (0 == x.compare(std::string{"ON"}));
+
+  # Botão 6 — Luzes Piscina
+  - platform: mqtt_subscribe
+    id: ts_luzes_piscina
+    topic: chacara/painel/luzes_piscina/state
+    on_value:
+      then:
+        - lvgl.widget.update:
+            id: btn_luzes_piscina
+            state:
+              checked: !lambda return (0 == x.compare(std::string{"ON"}));
